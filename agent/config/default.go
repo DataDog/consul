@@ -57,6 +57,7 @@ func DefaultSource() Source {
 		server = false
 		syslog_facility = "LOCAL0"
 		tls_min_version = "tls10"
+		recent_intent_timeout = "5m"
 
 		// TODO (slackpad) - Until #3744 is done, we need to keep these
 		// in sync with agent/consul/config.go.

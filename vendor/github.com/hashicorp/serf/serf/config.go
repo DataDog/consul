@@ -4,6 +4,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"sync"
 	"time"
 
 	"github.com/hashicorp/memberlist"
@@ -25,6 +26,11 @@ func init() {
 
 // Config is the configuration for creating a Serf instance.
 type Config struct {
+	// That locks allows for config parameters to be updated at runtime.
+	// For now, this lock protects the following fields:
+	// - RecentIntentTimeout
+	sync.RWMutex
+
 	// The name of this node. This must be unique in the cluster. If this
 	// is not set, Serf will set it to the hostname of the running machine.
 	NodeName string

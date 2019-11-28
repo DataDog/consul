@@ -388,9 +388,14 @@ func (c *Client) GetLANCoordinate() (lib.CoordinateSet, error) {
 // relevant configuration information
 func (c *Client) ReloadConfig(config *Config) error {
 	c.rpcLimiter.Store(rate.NewLimiter(config.RPCRate, config.RPCMaxBurst))
+
+	// clients agents only talk LAN (as op. to server which does both)
 	c.serf.Memberlist().ReloadSuspicionRateLimiter(
 		config.SerfLANConfig.MemberlistConfig.SuspicionRateLimit,
 		config.SerfLANConfig.MemberlistConfig.SuspicionMaxBurst,
 		config.SerfLANConfig.MemberlistConfig.SuspicionRateEnforce)
+
+	config.SerfLANConfig.RecentIntentTimeout = config.RecentIntentTimeout
+	c.serf.ReloadSerfConfig(config.SerfLANConfig)
 	return nil
 }

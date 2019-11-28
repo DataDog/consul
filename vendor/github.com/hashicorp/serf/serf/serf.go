@@ -1416,11 +1416,14 @@ func (s *Serf) handleReap() {
 	for {
 		select {
 		case <-time.After(s.config.ReapInterval):
+			s.config.RLock()
+			intentTimeout := s.config.RecentIntentTimeout
+			s.config.RUnlock()
 			s.memberLock.Lock()
 			now := time.Now()
 			s.failedMembers = s.reap(s.failedMembers, now, s.config.ReconnectTimeout)
 			s.leftMembers = s.reap(s.leftMembers, now, s.config.TombstoneTimeout)
-			reapIntents(s.recentIntents, now, s.config.RecentIntentTimeout)
+			reapIntents(s.recentIntents, now, intentTimeout)
 			s.memberLock.Unlock()
 		case <-s.shutdownCh:
 			return
@@ -1772,4 +1775,11 @@ func (s *Serf) NumNodes() (numNodes int) {
 
 func (s *Serf) ReloadSuspicionRateLimiter(limit rate.Limit, burst int, enforced bool) {
 	s.memberlist.ReloadSuspicionRateLimiter(limit, burst, enforced)
+}
+
+func (s *Serf) ReloadSerfConfig(config *Config) {
+	s.config.Lock()
+	defer s.config.Unlock()
+
+	s.config.RecentIntentTimeout = config.RecentIntentTimeout
 }

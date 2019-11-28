@@ -13,6 +13,8 @@ import (
 // setupSerf is used to setup and initialize a Serf
 func (c *Client) setupSerf(conf *serf.Config, ch chan serf.Event, path string) (*serf.Serf, error) {
 	conf.Init()
+	conf.Lock()
+	defer conf.Unlock()
 
 	conf.NodeName = c.config.NodeName
 	conf.Tags["role"] = "node"
@@ -33,6 +35,7 @@ func (c *Client) setupSerf(conf *serf.Config, ch chan serf.Event, path string) (
 	conf.ProtocolVersion = protocolVersionMap[c.config.ProtocolVersion]
 	conf.RejoinAfterLeave = c.config.RejoinAfterLeave
 	conf.LeaveBlackList = c.config.LeaveBlackList
+	conf.RecentIntentTimeout = c.config.RecentIntentTimeout
 	conf.Merge = &lanMergeDelegate{
 		dc:       c.config.Datacenter,
 		nodeID:   c.config.NodeID,

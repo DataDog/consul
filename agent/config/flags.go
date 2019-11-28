@@ -90,6 +90,7 @@ func AddFlags(fs *flag.FlagSet, f *Flags) {
 	add(&f.Config.RPCProtocol, "protocol", "Sets the protocol version. Defaults to latest.")
 	add(&f.Config.RaftProtocol, "raft-protocol", "Sets the Raft protocol version. Defaults to latest.")
 	add(&f.Config.DNSRecursors, "recursor", "Address of an upstream DNS server. Can be specified multiple times.")
+	add(&f.Config.RecentIntentTimeout, "recent-intent-timeout", "how long we store recent join and leave intents.")
 	add(&f.Config.RejoinAfterLeave, "rejoin", "Ignores a previous leave and attempts to rejoin the cluster.")
 	add(&f.Config.RetryJoinIntervalLAN, "retry-interval", "Time to wait between join attempts.")
 	add(&f.Config.RetryJoinIntervalWAN, "retry-interval-wan", "Time to wait between join -wan attempts.")

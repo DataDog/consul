@@ -881,6 +881,14 @@ type RuntimeConfig struct {
 	// hcl: raft_snapshot_threshold = int
 	RaftSnapshotInterval time.Duration
 
+	// RecentIntentTimeout is used to determine how long we store recent
+	// join and leave intents. This is used to guard against the case where
+	// Serf broadcasts an intent that arrives before the Memberlist event.
+	// It is important that this not be too short to avoid continuous
+	// rebroadcasting of dead events.
+	// hcl: recent_intent_timeout = "duration"
+	RecentIntentTimeout time.Duration
+
 	// ReconnectTimeoutLAN specifies the amount of time to wait to reconnect with
 	// another agent before deciding it's permanently gone. This can be used to
 	// control the time it takes to reap failed nodes from the cluster.

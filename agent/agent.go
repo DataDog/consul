@@ -907,6 +907,7 @@ func (a *Agent) consulConfig() (*consul.Config, error) {
 	base.SerfLANConfig.MemberlistConfig.SuspicionRateLimit = a.config.SuspicionRateLimit
 	base.SerfLANConfig.MemberlistConfig.SuspicionMaxBurst = a.config.SuspicionMaxBurst
 	base.SerfLANConfig.MemberlistConfig.SuspicionRateEnforce = a.config.SuspicionRateEnforce
+	base.SerfLANConfig.RecentIntentTimeout = a.config.RecentIntentTimeout
 	if a.config.ReconnectTimeoutLAN != 0 {
 		base.SerfLANConfig.ReconnectTimeout = a.config.ReconnectTimeoutLAN
 	}
@@ -927,6 +928,7 @@ func (a *Agent) consulConfig() (*consul.Config, error) {
 		base.SerfWANConfig.MemberlistConfig.SuspicionRateLimit = a.config.SuspicionRateLimit
 		base.SerfWANConfig.MemberlistConfig.SuspicionMaxBurst = a.config.SuspicionMaxBurst
 		base.SerfWANConfig.MemberlistConfig.SuspicionRateEnforce = a.config.SuspicionRateEnforce
+		base.SerfWANConfig.RecentIntentTimeout = a.config.RecentIntentTimeout
 		if a.config.ReconnectTimeoutWAN != 0 {
 			base.SerfWANConfig.ReconnectTimeout = a.config.ReconnectTimeoutWAN
 		}
@@ -1108,6 +1110,7 @@ func (a *Agent) consulConfig() (*consul.Config, error) {
 
 	base.LeaveBlackList = a.config.LeaveBlackList
 	base.LeaveBlackListPath = a.config.LeaveBlackListPath
+	base.RecentIntentTimeout = a.config.RecentIntentTimeout
 
 	// Setup the loggers
 	base.LogOutput = a.LogOutput
@@ -3461,6 +3464,10 @@ func (a *Agent) loadLeaveBlacklist(conf *config.RuntimeConfig) {
 	}
 }
 
+func (a *Agent) loadSerfConfig(conf *config.RuntimeConfig) {
+	a.config.RecentIntentTimeout = conf.RecentIntentTimeout
+}
+
 func (a *Agent) ReloadConfig(newCfg *config.RuntimeConfig) error {
 	// Bulk update the services and checks
 	a.PauseSync()
@@ -3507,6 +3514,7 @@ func (a *Agent) ReloadConfig(newCfg *config.RuntimeConfig) error {
 	a.loadLimits(newCfg)
 	a.loadSuspicionLimits(newCfg)
 	a.loadLeaveBlacklist(newCfg)
+	a.loadSerfConfig(newCfg)
 
 	// create the config for the rpc server/client
 	consulCfg, err := a.consulConfig()

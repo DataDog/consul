@@ -1103,6 +1103,11 @@ func (s *Server) ReloadConfig(config *Config) error {
 		config.SerfWANConfig.MemberlistConfig.SuspicionRateLimit,
 		config.SerfWANConfig.MemberlistConfig.SuspicionMaxBurst,
 		config.SerfWANConfig.MemberlistConfig.SuspicionRateEnforce)
+
+	config.SerfLANConfig.RecentIntentTimeout = config.RecentIntentTimeout
+	config.SerfWANConfig.RecentIntentTimeout = config.RecentIntentTimeout
+	s.serfLAN.ReloadSerfConfig(config.SerfLANConfig)
+	s.serfWAN.ReloadSerfConfig(config.SerfWANConfig)
 	return nil
 }
 

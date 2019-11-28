@@ -32,6 +32,8 @@ const (
 func (s *Server) setupSerf(conf *serf.Config, ch chan serf.Event, path string, wan bool, wanPort int,
 	segment string, listener net.Listener) (*serf.Serf, error) {
 	conf.Init()
+	conf.Lock()
+	defer conf.Unlock()
 
 	if wan {
 		conf.NodeName = fmt.Sprintf("%s.%s", s.config.NodeName, s.config.Datacenter)
@@ -79,6 +81,7 @@ func (s *Server) setupSerf(conf *serf.Config, ch chan serf.Event, path string, w
 	conf.ProtocolVersion = protocolVersionMap[s.config.ProtocolVersion]
 	conf.RejoinAfterLeave = s.config.RejoinAfterLeave
 	conf.LeaveBlackList = s.config.LeaveBlackList
+	conf.RecentIntentTimeout = s.config.RecentIntentTimeout
 	if wan {
 		conf.Merge = &wanMergeDelegate{}
 	} else {

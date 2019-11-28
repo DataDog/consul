@@ -319,6 +319,13 @@ type Config struct {
 	// warning and discard the remaining updates.
 	CoordinateUpdateMaxBatches int
 
+	// RecentIntentTimeout is used to determine how long we store recent
+	// join and leave intents. This is used to guard against the case where
+	// Serf broadcasts an intent that arrives before the Memberlist event.
+	// It is important that this not be too short to avoid continuous
+	// rebroadcasting of dead events.
+	RecentIntentTimeout time.Duration
+
 	// RPCHoldTimeout is how long an RPC can be "held" before it is errored.
 	// This is used to paper over a loss of leadership by instead holding RPCs,
 	// so that the caller experiences a slow response rather than an error.
