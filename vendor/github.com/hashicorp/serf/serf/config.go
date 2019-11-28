@@ -55,6 +55,9 @@ type Config struct {
 	// set, a timeout of 5 seconds will be set.
 	BroadcastTimeout time.Duration
 
+	// List of nodes we won't broadcast LeaveMessage for
+	LeaveBlackList BlackList
+
 	// LeavePropagateDelay is for our leave (node dead) message to propagate
 	// through the cluster. In particular, we want to stay up long enough to
 	// service any probes from other nodes before they learn about us
@@ -251,6 +254,17 @@ func (c *Config) Init() {
 	}
 }
 
+type BlackList interface {
+	Has(member string) bool
+}
+
+// Empty/no blacklist, for backward compat with Serf users that don't provide a real blacklist
+type noOpBlacklist struct{}
+
+func (n *noOpBlacklist) Has(member string) bool {
+	return false
+}
+
 // DefaultConfig returns a Config struct that contains reasonable defaults
 // for most of the configurations.
 func DefaultConfig() *Config {
@@ -276,6 +290,7 @@ func DefaultConfig() *Config {
 		MaxQueueDepth:                4096,
 		TombstoneTimeout:             24 * time.Hour,
 		FlapTimeout:                  60 * time.Second,
+		LeaveBlackList:               new(noOpBlacklist),
 		MemberlistConfig:             memberlist.DefaultLANConfig(),
 		QueryTimeoutMult:             16,
 		QueryResponseSizeLimit:       1024,

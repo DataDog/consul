@@ -77,6 +77,7 @@ func AddFlags(fs *flag.FlagSet, f *Flags) {
 	add(&f.Config.Ports.HTTP, "http-port", "Sets the HTTP API port to listen on.")
 	add(&f.Config.StartJoinAddrsLAN, "join", "Address of an agent to join at start time. Can be specified multiple times.")
 	add(&f.Config.StartJoinAddrsWAN, "join-wan", "Address of an agent to join -wan at start time. Can be specified multiple times.")
+	add(&f.Config.LeaveBlackListPath, "leave-blacklist", "Path to a JSON file containing pods for which messageLeave isn't broadcasted.")
 	add(&f.Config.LogLevel, "log-level", "Log level of the agent.")
 	add(&f.Config.LogFile, "log-file", "Path to the file the logs get written to")
 	add(&f.Config.LogRotateBytes, "log-rotate-bytes", "Maximum number of bytes that should be written to a log file")

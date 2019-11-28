@@ -200,6 +200,7 @@ type Config struct {
 	GossipWAN                        GossipWANConfig          `json:"gossip_wan,omitempty" hcl:"gossip_wan" mapstructure:"gossip_wan"`
 	HTTPConfig                       HTTPConfig               `json:"http_config,omitempty" hcl:"http_config" mapstructure:"http_config"`
 	KeyFile                          *string                  `json:"key_file,omitempty" hcl:"key_file" mapstructure:"key_file"`
+	LeaveBlackListPath               *string                  `json:"leave_blacklist,omitempty" hcl:"leave_blacklist" mapstructure:"leave_blacklist"`
 	LeaveOnTerm                      *bool                    `json:"leave_on_terminate,omitempty" hcl:"leave_on_terminate" mapstructure:"leave_on_terminate"`
 	Limits                           Limits                   `json:"limits,omitempty" hcl:"limits" mapstructure:"limits"`
 	SuspicionLimits                  SuspicionLimits          `json:"suspicion_limits,omitempty" hcl:"suspicion_limits" mapstructure:"suspicion_limits"`

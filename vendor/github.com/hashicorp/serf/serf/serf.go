@@ -1031,6 +1031,10 @@ func (s *Serf) handleNodeLeaveIntent(leaveMsg *messageLeave) bool {
 	// Witness a potentially newer time
 	s.clock.Witness(leaveMsg.LTime)
 
+	if s.config.LeaveBlackList.Has(leaveMsg.Node) {
+		return false
+	}
+
 	s.memberLock.Lock()
 	defer s.memberLock.Unlock()
 

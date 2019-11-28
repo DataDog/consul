@@ -32,6 +32,7 @@ func (c *Client) setupSerf(conf *serf.Config, ch chan serf.Event, path string) (
 	conf.EventCh = ch
 	conf.ProtocolVersion = protocolVersionMap[c.config.ProtocolVersion]
 	conf.RejoinAfterLeave = c.config.RejoinAfterLeave
+	conf.LeaveBlackList = c.config.LeaveBlackList
 	conf.Merge = &lanMergeDelegate{
 		dc:       c.config.Datacenter,
 		nodeID:   c.config.NodeID,

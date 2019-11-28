@@ -422,6 +422,7 @@ func (a *Agent) Start() error {
 	if err := a.loadMetadata(c); err != nil {
 		return err
 	}
+	a.loadLeaveBlacklist(c)
 
 	// create the proxy process manager and start it. This is purposely
 	// done here after the local state above is loaded in so we can have
@@ -1104,6 +1105,9 @@ func (a *Agent) consulConfig() (*consul.Config, error) {
 		case <-a.shutdownCh:
 		}
 	}
+
+	base.LeaveBlackList = a.config.LeaveBlackList
+	base.LeaveBlackListPath = a.config.LeaveBlackListPath
 
 	// Setup the loggers
 	base.LogOutput = a.LogOutput
@@ -3448,6 +3452,15 @@ func (a *Agent) loadSuspicionLimits(conf *config.RuntimeConfig) {
 	a.config.SuspicionRateEnforce = conf.SuspicionRateEnforce
 }
 
+func (a *Agent) loadLeaveBlacklist(conf *config.RuntimeConfig) {
+	a.config.LeaveBlackListPath = conf.LeaveBlackListPath
+	if err := a.config.LeaveBlackList.Load(conf.LeaveBlackListPath); err != nil {
+		a.logger.Printf("[WARN] failed to load leave blacklist (non fatal): %s", err)
+	} else {
+		a.logger.Printf("[INFO] leave blacklist length: %d", a.config.LeaveBlackList.Len())
+	}
+}
+
 func (a *Agent) ReloadConfig(newCfg *config.RuntimeConfig) error {
 	// Bulk update the services and checks
 	a.PauseSync()
@@ -3493,6 +3506,7 @@ func (a *Agent) ReloadConfig(newCfg *config.RuntimeConfig) error {
 
 	a.loadLimits(newCfg)
 	a.loadSuspicionLimits(newCfg)
+	a.loadLeaveBlacklist(newCfg)
 
 	// create the config for the rpc server/client
 	consulCfg, err := a.consulConfig()

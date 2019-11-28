@@ -346,6 +346,11 @@ type Config struct {
 	SuspicionMaxBurst    int
 	SuspicionRateEnforce bool
 
+	// LeaveBlackListPath is the path to a (json formated) list of nodes we
+	// shouldn't broadcast leaveMessages for.
+	LeaveBlackList     *structs.JList
+	LeaveBlackListPath string
+
 	// LeaveDrainTime is used to wait after a server has left the LAN Serf
 	// pool for RPCs to drain and new requests to be sent to other servers.
 	LeaveDrainTime time.Duration

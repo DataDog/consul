@@ -582,6 +582,8 @@ func (b *Builder) Build() (rt RuntimeConfig, err error) {
 	enableRemoteScriptChecks := b.boolVal(c.EnableScriptChecks)
 	enableLocalScriptChecks := b.boolValWithDefault(c.EnableLocalScriptChecks, enableRemoteScriptChecks)
 
+	leaveBlackList := &structs.JList{}
+
 	// ----------------------------------------------------------------
 	// build runtime config
 	//
@@ -749,6 +751,8 @@ func (b *Builder) Build() (rt RuntimeConfig, err error) {
 		GRPCAddrs:                               grpcAddrs,
 		KeyFile:                                 b.stringVal(c.KeyFile),
 		LeaveDrainTime:                          b.durationVal("performance.leave_drain_time", c.Performance.LeaveDrainTime),
+		LeaveBlackList:                          leaveBlackList,
+		LeaveBlackListPath:                      b.stringVal(c.LeaveBlackListPath),
 		LeaveOnTerm:                             leaveOnTerm,
 		LogLevel:                                b.stringVal(c.LogLevel),
 		LogFile:                                 b.stringVal(c.LogFile),

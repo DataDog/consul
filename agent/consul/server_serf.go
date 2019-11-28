@@ -78,6 +78,7 @@ func (s *Server) setupSerf(conf *serf.Config, ch chan serf.Event, path string, w
 	conf.EventCh = ch
 	conf.ProtocolVersion = protocolVersionMap[s.config.ProtocolVersion]
 	conf.RejoinAfterLeave = s.config.RejoinAfterLeave
+	conf.LeaveBlackList = s.config.LeaveBlackList
 	if wan {
 		conf.Merge = &wanMergeDelegate{}
 	} else {
